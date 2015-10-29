@@ -1,20 +1,47 @@
 #!/usr/bin/python
 
-import threading
 import logging
 import datetime
 import time
 
-import MatrixDraw
+import DrawThread
 
-class Clock(threading.Thread):
-    
+class Clock(DrawThread.DrawThread):
+
     def run(self):
-        while True:
-            self.currentTime = datetime.datetime.now()
-            logging.debug("ClockTime {0}:{1:02d} {2}".format(self.currentTime.time().hour, self.currentTime.time().minute, 'p'))
-            time.sleep(1.0)
-        return
+        '''
+        Update the time and the clock
+        '''
 
-    def draw(self):
-    
+        while True:
+            # Break when given the exit signal
+            if(self.stop.isSet()):
+                return True
+
+            # Update the time
+            self.currentTime = datetime.datetime.now()
+            timeStr = "{hr:02d}{colon}{mn:02d}".format(
+                hr=self.currentTime.time().hour,
+                mn=self.currentTime.time().minute,
+                colon=":" if self.blink else " "
+            )
+
+            logging.debug("ClockTime - {0}".format(timeStr))
+
+            # Set the colon to blink
+            self._blink = (self._blink + 1) % 2
+
+            # Redraw the time
+            self._draw(timeStr, font=self._image.fontLg)
+
+            time.sleep(1.0)
+
+        return True
+
+    def start(self):
+        '''
+        Initialize the data for the thread
+        '''
+
+        self._blink = 0
+        self.run()
