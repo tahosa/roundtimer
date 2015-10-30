@@ -26,10 +26,10 @@ class Clock(DrawThread.DrawThread):
                 colon=":" if self.blink else " "
             )
 
-            logging.debug("ClockTime - {0}".format(timeStr))
+            logging.debug("Clock - {0}".format(timeStr))
 
             # Set the colon to blink
-            self._blink = (self._blink + 1) % 2
+            self.blink = (self.blink + 1) % 2
 
             # Redraw the time
             self._draw(timeStr, font=self._image.fontLg)
@@ -43,5 +43,5 @@ class Clock(DrawThread.DrawThread):
         Initialize the data for the thread
         '''
 
-        self._blink = 0
-        self.run()
+        self.blink = 0
+        super(Clock, self).start()

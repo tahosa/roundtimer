@@ -6,8 +6,8 @@ import time
 import DrawThread
 
 class Timer(DrawThread.DrawThread):
-    def __init__(self, image, size, minutes=50, position=(0,0), color=(255,255,255,255)):
-        super(Timer, self).__init__(image, size, position, color)
+    def __init__(self, image, size, minutes=50, position=(0,0), offset=(0, 0), color=(255,255,255,255)):
+        super(Timer, self).__init__(image, size, position, offset, color)
         self._time = 60 * minutes
         self._blink = 0
 
@@ -34,14 +34,14 @@ class Timer(DrawThread.DrawThread):
                     sc=seconds
                 )
 
-                logging.debug("TimerTime - {0}".format(timeStr))
+                logging.debug("Time left - {0}".format(timeStr))
 
                 self._draw(timeStr)
 
                 time.sleep(1.0)
 
             else:
-                logging.debug("TimerTime - At time")
+                logging.debug("Timer at time")
 
                 self._draw('TIME')
                 return True
