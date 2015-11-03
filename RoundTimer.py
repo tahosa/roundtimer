@@ -26,7 +26,7 @@ def kill(signal, frame):
     '''
     for thread in threads:
         thread.stop.set()
-        exit()
+        sys.exit()
 
 # Set up ctrl+c trap for exiting
 logging.info("Creating signal trap")
