@@ -20,10 +20,12 @@ class Timer(DrawThread.DrawThread):
         while True:
             # Break when given the exit signal
             if(self.stop.isSet()):
+                logging.info("Stopping thread")
                 return True
                 
             # If the pause signal is given, block until it clears
             if(not self.pause.isSet()):
+                logging.info("Pausing thread")
                 self.pause.wait()
 
             # Update the timer
@@ -54,4 +56,5 @@ class Timer(DrawThread.DrawThread):
         return True
 
     def reset(self):
+        logging.info('Reseting timer')
         self._countdown = self._time

@@ -3,6 +3,7 @@
 import threading
 import re
 import logging
+import sys
 
 class Controller(threading.Thread):
 
@@ -20,20 +21,22 @@ class Controller(threading.Thread):
         while(True):
             cmd = raw_input('rt > ')
         
-            logging.info("Got: {0}".format(cmd))
+            # Skip if no input
+            if(not cmd):
+                continue
+        
+            logging.debug("Got: {0}".format(cmd))
             matches = re.match('([psre]|(?:pause|stop|reset|exit))(\d+)?', cmd)
-            
-            logging.info("Matches: {0}, {1}".format(matches.group(1), matches.group(2)))
-            
+                        
             if(not matches):
                 print('Invalid command. Valid operators are (p)ause, (r)eset, or (s)top followed by the thread number or (e)xit')
                 continue
                  
             elif(matches.group(1) == 'p' or matches.group(1) == 'pause'):
-                logging.info("Processing pause")
+                logging.debug("Processing pause")
                 
-                if(not int(matches.group(2))):
-                    print('Invalid thread. Please specify a number between 1 and {0}'.format(self.threads.length))
+                if(not int(matches.group(2)) or int(matches.group(2)) > len(self.threads) - 1):
+                    print('Invalid thread. Please specify a number between 1 and {0}'.format(len(self.threads) - 1))
                     continue
                     
                 thr = int(matches.group(2))
@@ -46,10 +49,10 @@ class Controller(threading.Thread):
                 continue
                 
             elif(matches.group(1) == 'r' or matches.group(1) == 'reset'):
-                logging.info("Processing reset")
+                logging.debug("Processing reset")
                 
-                if(not int(matches.group(2))):
-                    print('Invalid thread. Please specify a number between 1 and {0}'.format(self.threads.length))
+                if(not int(matches.group(2)) or int(matches.group(2)) > len(self.threads) - 1):
+                    print('Invalid thread. Please specify a number between 1 and {0}'.format(len(self.threads) - 1))
                     continue
                 
                 thr = int(matches.group(2))
@@ -58,10 +61,10 @@ class Controller(threading.Thread):
                 continue
                 
             elif(matches.group(1) == 's' or matches.group(1) == 'stop'):
-                logging.info("Processing stop")
+                logging.debug("Processing stop")
                 
-                if(not int(matches.group(2))):
-                    print('Invalid thread. Please specify a number between 1 and {0}'.format(self.threads.length))
+                if(not int(matches.group(2)) or int(matches.group(2)) > len(self.threads) - 1):
+                    print('Invalid thread. Please specify a number between 1 and {0}'.format(len(self.threads) - 1))
                     continue
                                                         
                 thr = int(matches.group(2))
@@ -70,12 +73,12 @@ class Controller(threading.Thread):
                 continue                
 
             elif(matches.group(1) == 'e' or matches.group(1) == 'exit'):
-                logging.info("Processing exit")
+                logging.debug("Processing exit")
                 
                 for thread in self.threads:
                     thread.stop.set()
                     
-                return True
+                sys.exit()
 
             else:
                 logging.warning("Error processing input")
