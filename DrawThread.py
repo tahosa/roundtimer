@@ -31,7 +31,8 @@ class DrawThread(threading.Thread):
         self._image.lock()
 
         # Overdraw the region with a blank
-        blank = tuple(map(operator.add, self._position, self._size))
+        actualSize = tuple(map(operator.add, self._size, (-1, -1)))
+        blank = tuple(map(operator.add, self._position, actualSize))
         self._image.rectangle([self._position, blank], fill=(0,0,0,0))
         
         # Draw the given text
