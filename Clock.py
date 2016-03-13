@@ -15,8 +15,9 @@ class Clock(DrawThread.DrawThread):
 
         while True:
             # Break when given the exit signal
-            if(self.stop.isSet()):
-                return True
+            if self.stop.isSet():
+                logging.info("Stopping thread")
+                break
 
             # Update the time
             self.currentTime = datetime.datetime.now()
