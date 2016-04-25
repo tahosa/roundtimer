@@ -25,10 +25,8 @@ def kill(signal, frame):
     Trap the signal and kill any ongoing threads, then exit
     '''
     for thread in threads:
-        try:
+        if thread.pause:
             thread.pause.set()
-        except:
-            pass
         thread.stop.set()
     sys.exit()
 
