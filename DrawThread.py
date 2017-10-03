@@ -24,7 +24,7 @@ class DrawThread(threading.Thread):
         '''
         Draw the current time to the output buffer
         '''
-        if(font == None):
+        if font == None:
             font = self._image.fontSm
 
         # Aquire a lock on the image
